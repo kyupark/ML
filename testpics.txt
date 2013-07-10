@@ -1,0 +1,4 @@
+test.bmp
+test2.bmp
+test3.bmp
+test4.bmp

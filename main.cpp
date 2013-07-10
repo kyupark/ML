@@ -1,9 +1,5 @@
-//
-//  Main.cpp
-//
-
 #include <iostream>
-#include "image.cpp"
+#include "trainingSet.cpp"
 #include <fstream>
 #include <string.h>
 
@@ -11,13 +7,14 @@ using namespace std;
 
 int main() {
 
-    MImage img("test.bmp");
-    //std::string str(img.value());
-    std::string exits;
+	int a;
+	trainingSet test("testpics.txt");
+	printf("hello\n");
+	vector<char> x (test.testdata[0]); //just testing to see if anything got written in
 
-    img.print();
-    cout << "Enter Something: ";
-    cin >> exits;
+	cout << x[599];
+
+	cin >> a; // stops the program so I can look at the output
 
     return 0;
 
