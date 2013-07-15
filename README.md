@@ -1,4 +1,4 @@
 ML
 ==
 
-Machine learning application to recognize handwritten characters
+Machine learning application to recognize handwritten numbers
