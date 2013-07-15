@@ -57,7 +57,7 @@ end
 
 RHO = 0.01;                            % a bunch of constants for line searches
 SIG = 0.5;       % RHO and SIG are the constants in the Wolfe-Powell conditions
-INT = 0.1;    % don't reevaluate within 0.1 of the limit of the current bracket
+INT = 0.1;    % dont reevaluate within 0.1 of the limit of the current bracket
 EXT = 3.0;                    % extrapolate maximum 3 times the current bracket
 MAX = 20;                         % max 20 function evaluations per line search
 RATIO = 100;                                      % maximum allowed slope ratio
