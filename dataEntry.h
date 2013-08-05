@@ -13,8 +13,8 @@ public:
 	
 	//public members
 	//----------------------------------------------------------------------------------------------------------------
-	std::vector<double> pattern;	//all the patterns
-	std::vector<double> target;		//all the targets
+	double* pattern;	//all the patterns
+	double* target;		//all the targets
 
 public:
 
@@ -22,11 +22,12 @@ public:
 	//----------------------------------------------------------------------------------------------------------------
 
 	//constructor
-	dataEntry(std::vector<double> p, std::vector<double> t): pattern(p), target(t) {}
+	dataEntry(double* p, double* t): pattern(p), target(t) {}
 		
 	~dataEntry()
 	{				
-		
+		delete[] pattern;
+		delete[] target;
 	}
 
 };

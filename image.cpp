@@ -1,134 +1,64 @@
 #include "image.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <stdlib.h>
 
 using namespace std;
 
-  Image::Image(int numRows, int numCols, int grayLevels)
-/* Creates an Image of numRows x numCols and creates the arrays for it*/
+  Image::Image()
 {	
-	
-	N = numRows;
-	M = numCols;
-	Q = grayLevels;
 	
 } 
 
 Image::~Image(){}
 
-int Image::readImage(char fname[])
+int Image::readImage(char fname[], int count)
 {
-	int i, j;
-	int N, M, Q;
-	unsigned char *charImage;
-	char header [100], *ptr;
+	int j;
+	char header[100];
+	pixelVal = new double[784];
 
 	ifstream ifp;
+
 	ifp.open(fname, ios::in | ios::binary);
+	ofstream ofp("debug.txt");
 
 	if (!ifp) 	//error checking
 	{
 		cout << "Can't read image: " << fname << endl;
 		return(-1);
 	}
+	ifp.seekg(count, ifp.beg); //moves to current position in the data file
 
  // read header
 
-	ifp.getline(header,100,'\n');		//magic number
-	if ( (header[0]!=80) || (header[1]!=50) )	  //if not P5
-	{   
-		cout << "Image " << fname << " is not PGM" << endl;
-		return(-1);
-	}
+	//ifp.getline(header,100,'\n');		//magic number
 
-	ifp.getline(header,100,'\n');
-	while(header[0]=='#')		//file name line in file starts with #
-		ifp.getline(header,100,'\n');
+//	ifp.getline(header,100,'\n');
+//	while(header[0]=='#')		//file name line in file starts with #
+//		ifp.getline(header,100,'\n');
 
-	M=strtol(header,&ptr,0);	//number of colums
-	N=atoi(ptr);			//number of rows
-
-	ifp.getline(header,100,'\n');
-	Q=255;	//max gray value
-
-	charImage = (unsigned char*) new unsigned char [M*N];	//creates 2D array
-
-	ifp.read( reinterpret_cast<char *>(charImage), (M*N)*sizeof(unsigned char));  //reads in 2D array
-
-	if (ifp.fail()) 
-	{
-		cout << "Image " << fname << " has wrong size" << endl;
-		return(-1);
-	}
-
-	ifp.close();
-
- // Convert the unsigned characters to integers
+//	ifp.getline(header,100,'\n');
 
 	int val;
-
-	for(i=0; i<N*M; i++){
-			val = (int)charImage[i];
-			pixelVal.push_back(val);	 
+	unsigned char i[1];
+	for(j = 0; j < 784; j++){  //reads in values and converts them to integers
+		ifp.read((char*)i, 1);
+		
+		val = i[0];
+		//ofp << "Read in Value: " << val << "|";
+		if(val != 0){
+			val = 1;
 		}
+		
+		ofp <<val;
+		pixelVal[j] = val;
+		
+	}  
 
-	delete [] charImage;
+	ifp.close();
 
 	return (1);
 }
 
-int readImageHeader(char fname[], int& N, int& M, int& Q, bool& type)
-{
-	int i, j;
-	unsigned char *charImage;
-	char header [100], *ptr;
-	
-	ifstream ifp;
-	ifp.open(fname, ios::in | ios::binary);
-
-	if (!ifp) 
-	{
-		cout << "Can't read image: " << fname << endl;
-		return(-1);
-	}
-
- // read header
-
-//*************************
-//this section will not be used in this tutorial, this is used for programs that can handle color images
-
-	type = false;   // PGM
-
-	ifp.getline(header,100,'\n');
-	if ( (header[0] == 80) && (header[1]== 50) ) 
-	{  
-	  type = false;
-	}
-	else if ( (header[0] == 80) && (header[1] == 54) ) 
-	{	   
-	  type = true;
-	} 
-	else 
-	{
-		cout << "Image " << fname << " is not PGM or PPM" << endl;
-		return(-1);
-	}
-
-//*****************************
-
-	ifp.getline(header,100,'\n');
-	while(header[0]=='#')
-		ifp.getline(header,100,'\n');
-
-	M=strtol(header,&ptr,0);
-	N=atoi(ptr);
-
-	ifp.getline(header,100,'\n');
-
-	Q=255;
-
-	ifp.close();
-
-	return(1);
-}

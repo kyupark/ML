@@ -1,8 +1,9 @@
+
 #ifndef NNetwork
 #define NNetwork
 
-#include "trainingDataSet.h"
-#include "dataEntry.h"
+#include "dataReader.h"
+using namespace std;
 
 class neuralNetworkTrainer;
 
@@ -16,13 +17,13 @@ private:
 	int nInput, nHidden, nOutput;
 	
 	//neurons
-	std::vector<double> inputNeurons;
-	std::vector<double> hiddenNeurons;
-	std::vector<double> outputNeurons;
+	double* inputNeurons;
+	double* hiddenNeurons;
+	double* outputNeurons;
 
 	//weights
-	std::vector<std::vector<double> > wInputHidden;
-	std::vector<std::vector<double> > wHiddenOutput;
+	double** wInputHidden;
+	double** wHiddenOutput;
 		
 	//Friends
 	//--------------------------------------------------------------------------------------------
@@ -40,9 +41,9 @@ public:
 	//weight operations
 	bool loadWeights(char* inputFilename);
 	bool saveWeights(char* outputFilename);
-	int* feedForwardPattern( std::vector<double> pattern );
-	double getSetAccuracy( std::vector<dataEntry >& set );
-	double getSetMSE( std::vector<dataEntry >& set );
+	double* feedForwardPattern( double* pattern );
+	double getSetAccuracy( std::vector<dataEntry*>& set );
+	double getSetMSE( std::vector<dataEntry*>& set );
 
 	//private methods
 	//--------------------------------------------------------------------------------------------
@@ -52,7 +53,7 @@ private:
 	void initializeWeights();
 	inline double activationFunction( double x );
 	inline int clampOutput( double x );
-	void feedForward( std::vector<double> pattern );
+	void feedForward( double* pattern );
 	
 };
 

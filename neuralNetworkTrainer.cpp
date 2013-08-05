@@ -5,7 +5,6 @@
 
 //include definition file
 #include "neuralNetworkTrainer.h"
-#include "dataEntry.h"
 
 using namespace std;
 
@@ -128,8 +127,6 @@ void neuralNetworkTrainer::trainNetwork( trainingDataSet* tSet )
 	//reset epoch and log counters
 	epoch = 0;
 	lastEpochLogged = -logResolution;
-
-	
 		
 	//train network using training dataset for training and generalization dataset for testing
 	//--------------------------------------------------------------------------------------------------------
@@ -141,7 +138,6 @@ void neuralNetworkTrainer::trainNetwork( trainingDataSet* tSet )
 
 		//use training set to train network
 		runTrainingEpoch( tSet->trainingSet );
-
 
 		//get generalization set accuracy and MSE
 		generalizationSetAccuracy = NN->getSetAccuracy( tSet->generalizationSet );
@@ -155,12 +151,12 @@ void neuralNetworkTrainer::trainNetwork( trainingDataSet* tSet )
 		}
 		
 		//print out change in training /generalization accuracy (only if a change is greater than a percent)
-		if ( ceil(previousTAccuracy) != ceil(trainingSetAccuracy) || ceil(previousGAccuracy) != ceil(generalizationSetAccuracy) ) 
-		{	
+		//if ( ceil(previousTAccuracy) != ceil(trainingSetAccuracy) || ceil(previousGAccuracy) != ceil(generalizationSetAccuracy) ) 
+		//{	
 			cout << "Epoch :" << epoch;
 			cout << " TSet Acc:" << trainingSetAccuracy << "%, MSE: " << trainingSetMSE ;
 			cout << " GSet Acc:" << generalizationSetAccuracy << "%, MSE: " << generalizationSetMSE << endl;				
-		}
+		//}
 		
 		//once training set is complete increment epoch
 		epoch++;
@@ -183,18 +179,19 @@ void neuralNetworkTrainer::trainNetwork( trainingDataSet* tSet )
 /*******************************************************************
 * Run a single training epoch
 ********************************************************************/
-void neuralNetworkTrainer::runTrainingEpoch( vector<dataEntry> trainingSet )
+void neuralNetworkTrainer::runTrainingEpoch( vector<dataEntry*> trainingSet )
 {
 	//incorrect patterns
 	double incorrectPatterns = 0;
 	double mse = 0;
-
+		
 	//for every training pattern
 	for ( int tp = 0; tp < (int) trainingSet.size(); tp++)
 	{						
 		//feed inputs through network and backpropagate errors
-		NN->feedForward(trainingSet[tp].pattern);
-		backpropagate( trainingSet[tp].target );	
+		NN->feedForward( trainingSet[tp]->pattern );
+		backpropagate( trainingSet[tp]->target );	
+
 		//pattern correct flag
 		bool patternCorrect = true;
 
@@ -202,10 +199,10 @@ void neuralNetworkTrainer::runTrainingEpoch( vector<dataEntry> trainingSet )
 		for ( int k = 0; k < NN->nOutput; k++ )
 		{					
 			//pattern incorrect if desired and output differ
-			if ( NN->clampOutput( NN->outputNeurons[k] ) != trainingSet[tp].target[k] ) patternCorrect = false;
+			if ( NN->clampOutput( NN->outputNeurons[k] ) != trainingSet[tp]->target[k] ) patternCorrect = false;
 			
 			//calculate MSE
-			mse += pow(( NN->outputNeurons[k] - trainingSet[tp].target[k] ), 2);
+			mse += pow(( NN->outputNeurons[k] - trainingSet[tp]->target[k] ), 2);
 		}
 		
 		//if pattern is incorrect add to incorrect count
@@ -223,7 +220,7 @@ void neuralNetworkTrainer::runTrainingEpoch( vector<dataEntry> trainingSet )
 /*******************************************************************
 * Propagate errors back through NN and calculate delta values
 ********************************************************************/
-void neuralNetworkTrainer::backpropagate( std::vector<double> desiredOutputs )
+void neuralNetworkTrainer::backpropagate( double* desiredOutputs )
 {		
 	//modify deltas between hidden and output layers
 	//--------------------------------------------------------------------------------------------------------

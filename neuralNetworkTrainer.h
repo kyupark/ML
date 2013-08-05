@@ -14,7 +14,6 @@
 
 //neural network header
 #include "neuralNetwork.h"
-#include "dataEntry.h"
 
 //Constant Defaults!
 #define LEARNING_RATE 0.001
@@ -23,6 +22,7 @@
 #define DESIRED_ACCURACY 90  
 #define DESIRED_MSE 0.001 
 
+using namespace std;
 /*******************************************************************
 * Basic Gradient Descent Trainer with Momentum and Batch Learning
 ********************************************************************/
@@ -89,8 +89,8 @@ public:
 private:
 	inline double getOutputErrorGradient( double desiredValue, double outputValue );
 	double getHiddenErrorGradient( int j );
-	void runTrainingEpoch( std::vector<dataEntry> trainingSet );
-	void backpropagate(std::vector<double> desiredOutputs);
+	void runTrainingEpoch( std::vector<dataEntry*> trainingSet );
+	void backpropagate(double* desiredOutputs);
 	void updateWeights();
 };
 
